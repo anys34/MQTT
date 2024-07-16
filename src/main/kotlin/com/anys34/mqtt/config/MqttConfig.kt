@@ -12,7 +12,7 @@ import org.springframework.messaging.MessageHandler
 
 @Configuration
 class MqttConfig {
-    private val brokerUrl = "tcp://localhost:1883"
+    private val brokerUrl = "tcp://10.150.150.90:1883"
     private val clientId = "mqtt-anys"
     private val topic = "bssm"
 
