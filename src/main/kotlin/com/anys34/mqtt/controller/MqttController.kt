@@ -1,18 +1,15 @@
 package com.anys34.mqtt.controller
 
-import com.anys34.mqtt.config.MqttConfig.Companion.CLIENT_ID
+import com.anys34.mqtt.config.MqttConfig.Companion.PUB_CLIENT_ID
 import com.anys34.mqtt.controller.dto.req.SendRequest
 import com.anys34.mqtt.service.MqttService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/mqtt")
 @RestController
 class MqttController(
-        private val mqttGateway: MqttService.MqttGateway
+        private val mqttGateway: MqttService.MqttGateway,
+        private val mqttService: MqttService
 ) {
     @GetMapping("/ping")
     fun ping() {
@@ -24,6 +21,11 @@ class MqttController(
             @RequestBody
             sendRequest: SendRequest
     ) {
-        mqttGateway.sendToMqtt("["+CLIENT_ID+"]: " + sendRequest.message)
+        mqttGateway.sendToMqtt("["+ PUB_CLIENT_ID+"]: " + sendRequest.message)
     }
+
+    @GetMapping("/messages")
+    fun listMessage(
+            @RequestParam clientId: String
+    ) = mqttService.listMessages(clientId)
 }
