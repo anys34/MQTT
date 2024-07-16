@@ -1,4 +1,4 @@
-package com.example.demo.config
+package com.anys34.mqtt.config
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.springframework.context.annotation.Bean
