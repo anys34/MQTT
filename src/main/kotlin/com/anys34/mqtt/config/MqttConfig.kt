@@ -13,7 +13,6 @@ import org.springframework.messaging.MessageHandler
 @Configuration
 class MqttConfig {
     private val brokerUrl = "tcp://10.150.150.90:1883"
-    private val clientId = "mqtt-anys"
     private val topic = "bssm"
 
     @Bean
@@ -32,10 +31,14 @@ class MqttConfig {
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     fun mqttOutbound(): MessageHandler {
-        val handler = MqttPahoMessageHandler(clientId, mqttPahoClientFactory()).apply {
+        val handler = MqttPahoMessageHandler(CLIENT_ID, mqttPahoClientFactory()).apply {
             setAsync(true)
             setDefaultTopic(topic)
         }
         return handler
+    }
+
+    companion object {
+        const val CLIENT_ID = "mqtt-anys"
     }
 }

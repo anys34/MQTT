@@ -1,5 +1,6 @@
 package com.anys34.mqtt.controller
 
+import com.anys34.mqtt.config.MqttConfig.Companion.CLIENT_ID
 import com.anys34.mqtt.controller.dto.req.SendRequest
 import com.anys34.mqtt.service.MqttService
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,6 +24,6 @@ class MqttController(
             @RequestBody
             sendRequest: SendRequest
     ) {
-        mqttGateway.sendToMqtt(sendRequest.message)
+        mqttGateway.sendToMqtt("["+CLIENT_ID+"]: " + sendRequest.message)
     }
 }
