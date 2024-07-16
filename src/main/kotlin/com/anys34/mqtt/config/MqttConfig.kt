@@ -1,7 +1,8 @@
 package com.anys34.mqtt.config
 
-import com.anys34.mqtt.service.MqttService
+import com.anys34.mqtt.service.MqttListener
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.integration.annotation.ServiceActivator
@@ -12,15 +13,13 @@ import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.MessageHandler
-import java.time.LocalDateTime
 
 @Configuration
-class MqttConfig(
-        private val mqttService: MqttService
-) {
+class MqttConfig {
+    @Autowired
+    private lateinit var mqttListener: MqttListener
     private val brokerUrl = "tcp://10.150.150.90:1883"
     private val topic = "bssm"
-    val regex = "\\[(.*?)\\]".toRegex()
 
     @Bean
     fun mqttPahoClientFactory()
@@ -69,17 +68,7 @@ class MqttConfig(
     @Bean
     @ServiceActivator(inputChannel = "mqttInboundChannel")
     fun mqttInbound(): MessageHandler {
-        return MessageHandler { message ->
-            println("[${LocalDateTime.now()}] $message")
-
-            val payload: String = message.payload as String
-
-            val clientIdMatch = regex.find(payload)
-            val clientId = clientIdMatch?.groups?.get(1)?.value ?: "Unknown"
-            val res = payload.substringAfter("]:").trim()
-
-            mqttService.save(com.anys34.mqtt.domain.Message(clientId, res))
-        }
+        return mqttListener
     }
 
 
